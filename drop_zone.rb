@@ -18,50 +18,42 @@ def readme_path
   File.join(drop_zone_root, README_NAME)
 end
 
+def display_root
+  "iCloud Drive/#{DROP_ZONE_NAME}"
+end
+
+def display_readme
+  "#{display_root}/#{README_NAME}"
+end
+
 def default_readme
   <<~TEXT
     Drop Zone
 
     This folder is used by local scripts and agents as a shared drop location
     for small status files and machine-generated outputs.
-
-    Suggested structure:
-
-      Drop Zone/
-        codex-limit/
-        gas-bill/
-        calendar-status/
-
-    Each agent or tool may store files like:
-
-      current.json
-      current.txt
-      history.log
-
-    This folder is intended for simple handoff between scripts, iPhone/iPad
-    Shortcuts, and Apple Watch-friendly workflows.
   TEXT
 end
 
 def ensure_drop_zone!
   unless Dir.exist?(ICLOUD_BASE)
-    warn "iCloud Drive base folder not found: #{ICLOUD_BASE}"
+    warn "Error: iCloud Drive not found."
     exit 1
   end
 
-  created_anything = false
-
-  unless Dir.exist?(drop_zone_root)
+  if Dir.exist?(drop_zone_root)
+    puts "Folder exists: #{display_root}"
+  else
     FileUtils.mkdir_p(drop_zone_root)
-    created_anything = true
+    puts "Folder created: #{display_root}"
   end
 
-  unless File.exist?(readme_path)
+  if File.exist?(readme_path)
+    puts "README exists: #{display_readme}"
+  else
     File.write(readme_path, default_readme)
-    created_anything = true
+    puts "README created: #{display_readme}"
   end
-
-  created_anything
 end
 
 ensure_drop_zone!
