@@ -35,6 +35,29 @@ def default_readme
   TEXT
 end
 
+def sanitize_app_name(name)
+  cleaned = name.to_s
+                .strip
+                .downcase
+                .gsub(/\s+/, "-")
+                .gsub(/[^a-z0-9\-_]/, "")
+
+  if cleaned.empty?
+    warn "Error: invalid app name."
+    exit 1
+  end
+
+  cleaned
+end
+
+def app_folder_path(app_name)
+  File.join(drop_zone_root, sanitize_app_name(app_name))
+end
+
+def display_app_folder(app_name)
+  "#{display_root}/#{sanitize_app_name(app_name)}"
+end
+
 def ensure_drop_zone!
   unless Dir.exist?(ICLOUD_BASE)
     warn "Error: iCloud Drive not found."
@@ -56,4 +79,22 @@ def ensure_drop_zone!
   end
 end
 
+def ensure_app_folder!(app_name)
+  full_path = app_folder_path(app_name)
+  display_path = display_app_folder(app_name)
+
+  if Dir.exist?(full_path)
+    puts "App folder exists: #{display_path}"
+  else
+    FileUtils.mkdir_p(full_path)
+    puts "App folder created: #{display_path}"
+  end
+
+  puts "Full path: #{full_path}"
+end
+
 ensure_drop_zone!
+
+if ARGV[0]
+  ensure_app_folder!(ARGV[0])
+end
