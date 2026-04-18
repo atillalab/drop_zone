@@ -58,24 +58,24 @@ def display_app_folder(app_name)
   "#{display_root}/#{sanitize_app_name(app_name)}"
 end
 
-def ensure_drop_zone!
+def ensure_drop_zone!(verbose: true)
   unless Dir.exist?(ICLOUD_BASE)
     warn "Error: iCloud Drive not found."
     exit 1
   end
 
   if Dir.exist?(drop_zone_root)
-    puts "Folder exists: #{display_root}"
+    puts "Folder exists: #{display_root}" if verbose
   else
     FileUtils.mkdir_p(drop_zone_root)
-    puts "Folder created: #{display_root}"
+    puts "Folder created: #{display_root}" if verbose
   end
 
   if File.exist?(readme_path)
-    puts "README exists: #{display_readme}"
+    puts "README exists: #{display_readme}" if verbose
   else
     File.write(readme_path, default_readme)
-    puts "README created: #{display_readme}"
+    puts "README created: #{display_readme}" if verbose
   end
 end
 
@@ -93,8 +93,35 @@ def ensure_app_folder!(app_name)
   puts "Full path: #{full_path}"
 end
 
-ensure_drop_zone!
+def list_app_folders
+  Dir.children(drop_zone_root)
+     .sort
+     .select do |entry|
+       File.directory?(File.join(drop_zone_root, entry))
+     end
+end
 
-if ARGV[0]
+def list_app_folders!
+  app_folders = list_app_folders
+
+  if app_folders.empty?
+    puts "No app folders found."
+    return
+  end
+
+  app_folders.each do |app_folder|
+    puts app_folder
+  end
+end
+
+case ARGV[0]
+when nil
+  ensure_drop_zone!
+  nil
+when "list"
+  ensure_drop_zone!(verbose: false)
+  list_app_folders!
+else
+  ensure_drop_zone!
   ensure_app_folder!(ARGV[0])
 end
