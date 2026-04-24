@@ -82,3 +82,15 @@ It does not currently support:
 * Linux
 * Windows
 * non-iCloud storage paths
+
+## Example integration
+
+Example with `[codex-limit-tracker](https://github.com/atillalab/codex_limit_tracker)`:
+
+```zsh
+codex-limit-snapshot() {
+  local app_dir
+  app_dir="$(drop-zone ensure codex_limit_tracker)" || return 1
+  codex-limit-tracker --json > "$app_dir/latest.json"
+  echo "Saved: $app_dir/latest.json"
+}
