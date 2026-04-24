@@ -102,3 +102,7 @@ codex-limit-snapshot() {
   echo "Saved: $app_dir/latest.json"
 }
 ```
+
+## TODO
+
+- Consider creating a Homebrew tap once the command name, usage, and install path are stable.
