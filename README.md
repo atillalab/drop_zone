@@ -28,6 +28,19 @@ List app folders:
 ruby drop_zone.rb list
 ```
 
+## macOS System-Wide Usage
+
+```bash
+ln -sf ~/Documents/path-to-drop_zone/drop_zone.rb /usr/local/bin/drop-zone
+chmod +x ~/Documents/path-to-drop_zone/drop_zone.rb
+
+drop-zone
+```
+
+macOS system-wide usage via symlink so `drop-zone` can be run from anywhere.
+`chmod +x` makes the script executable and avoids `zsh: permission denied: drop-zone`.
+If `/usr/local/bin` is not writable for your user, run the `ln` command with `sudo`.
+
 ## How AI tools use it
 
 AI tools should not know the full iCloud Drive path.
