@@ -85,7 +85,7 @@ It does not currently support:
 
 ## Example integration
 
-Example with `[codex-limit-tracker](https://github.com/atillalab/codex_limit_tracker)`:
+Example with [`codex-limit-tracker`](https://github.com/atillalab/codex_limit_tracker):
 
 ```zsh
 codex-limit-snapshot() {
